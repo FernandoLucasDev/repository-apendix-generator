@@ -36,3 +36,8 @@ class GitHubService:
         response.raise_for_status()
         return response.json()
 
+    def get_repo_info(self):
+        url = f"{self.base_url}/repos/{self.owner}/{self.repo}"
+        response = requests.get(url, headers=self.headers)
+        response.raise_for_status()
+        return response.json()
