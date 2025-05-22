@@ -63,3 +63,13 @@ class AiService:
 
     def format_inline_bold_gray(self, text):
         return re.sub(r'\*\*(.*?)\*\*', r'<font color="#666666"><b>\1</b></font>', text)
+    
+    def summarize_commits(self, commits):
+        return len(commits)
+
+    def summarize_tags(self, tags):
+        return [tag["name"] for tag in tags][:5] 
+
+    def summarize_langs(self, langs):
+        total = sum(langs.values())
+        return {k: f"{(v/total*100):.1f}%" for k, v in langs.items()}
