@@ -1,4 +1,9 @@
 from groq import Groq
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
+from reportlab.platypus import SimpleDocTemplate
+from datetime import datetime
 import os
 
 class ReportService:
@@ -22,6 +27,31 @@ class ReportService:
             max_tokens=1024
         )
 
-        print(response)
+        self.pdf_generator(response.choices[0].message.content)
 
-    
+    def pdf_generator(self, content):
+        print("Init report PDF generation...")
+
+        dir = "./templates/"
+        os.makedirs(dir, exist_ok=True)
+
+        now = datetime.now()
+        date_time_string = now.strftime("%Y-%m-%d_%H-%M-%S")
+
+        pdf_file = os.path.join(dir, f"technical_resume_{date_time_string}.pdf")
+
+        doc = SimpleDocTemplate(pdf_file, pagesize=A4, rightMargin=40, leftMargin=40, topMargin=60, bottomMargin=60)
+
+        styles = getSampleStyleSheet()
+        style = styles["Normal"]
+
+        flowables = []
+
+        for paragraph in content.split("\n\n"):
+            flowables.append(Paragraph(paragraph.strip(), style))
+            flowables.append(Spacer(1, 12)) 
+
+
+        doc.build(flowables)
+
+        print(f"PDF generated at {pdf_file}")
