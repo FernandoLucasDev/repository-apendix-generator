@@ -3,6 +3,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import Paragraph, Spacer, ListFlowable, ListItem
 from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.lib import colors
+import re
 
 class AiService:
     def __init__(self):
@@ -13,6 +14,7 @@ class AiService:
         style_normal = styles["Normal"]
         style_bold = ParagraphStyle('Bold', parent=style_normal, fontName='Helvetica-Bold', fontSize=12, spaceAfter=6)
         style_justify = ParagraphStyle('Justify', parent=style_normal, alignment=TA_JUSTIFY)
+        style_subtitle = ParagraphStyle('Subtitle', parent=style_normal, fontName='Helvetica-Bold', fontSize=14, spaceAfter=10)
         
         flowables = []
         lines = raw_text.split('\n')
@@ -23,18 +25,25 @@ class AiService:
             
             if line.startswith('**') and line.endswith('**'):
                 title_text = line.strip('*').strip()
-                flowables.append(Paragraph(f"<b>{title_text}</b>", style_bold))
+                title_text = self.format_inline_bold_gray(title_text)
+                flowables.append(Paragraph(title_text, style_bold))
                 flowables.append(Spacer(1, 12))
 
+            elif line.startswith('###'):
+                subtitle_text = line.lstrip('#').strip()
+                subtitle_text = self.format_inline_bold_gray(subtitle_text)
+                flowables.append(Paragraph(subtitle_text, style_subtitle))
+                flowables.append(Spacer(1, 10))
+
             elif line.startswith('*') or line.startswith('+'):
-                
                 items = []
                 while i < len(lines) and (lines[i].strip().startswith('*') or lines[i].strip().startswith('+')):
                     item_text = lines[i].strip().lstrip('*+').strip()
+                    item_text = self.format_inline_bold_gray(item_text)
                     items.append(Paragraph(item_text, style_justify))
                     i += 1
                 i -= 1
-                
+
                 flowables.append(ListFlowable(
                     [ListItem(i) for i in items],
                     bulletType='bullet',
@@ -42,8 +51,9 @@ class AiService:
                     leftIndent=20
                 ))
                 flowables.append(Spacer(1, 10))
-            
+
             elif line:
+                line = self.format_inline_bold_gray(line)
                 flowables.append(Paragraph(line, style_justify))
                 flowables.append(Spacer(1, 8))
             
@@ -51,3 +61,5 @@ class AiService:
         
         return flowables
 
+    def format_inline_bold_gray(self, text):
+        return re.sub(r'\*\*(.*?)\*\*', r'<font color="#666666"><b>\1</b></font>', text)
