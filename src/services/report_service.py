@@ -4,6 +4,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 from reportlab.platypus import SimpleDocTemplate
 from datetime import datetime
+from .ai_service import AiService
 import os
 
 class ReportService:
@@ -32,6 +33,8 @@ class ReportService:
     def pdf_generator(self, content):
         print("Init report PDF generation...")
 
+        ai_utils = AiService()
+
         dir = "./templates/"
         os.makedirs(dir, exist_ok=True)
 
@@ -42,15 +45,7 @@ class ReportService:
 
         doc = SimpleDocTemplate(pdf_file, pagesize=A4, rightMargin=40, leftMargin=40, topMargin=60, bottomMargin=60)
 
-        styles = getSampleStyleSheet()
-        style = styles["Normal"]
-
-        flowables = []
-
-        for paragraph in content.split("\n\n"):
-            flowables.append(Paragraph(paragraph.strip(), style))
-            flowables.append(Spacer(1, 12)) 
-
+        flowables = ai_utils.parse_to_flowables(content) 
 
         doc.build(flowables)
 
