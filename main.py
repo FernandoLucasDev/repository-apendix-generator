@@ -1,4 +1,5 @@
 from src.services.github_service import GitHubService
+from src.services.report_service import ReportService
 
 service = GitHubService("flutter", "flutter")
 
@@ -13,4 +14,6 @@ prompt = {
     "langs": langs
 }
 
-print(prompt)
+#print(prompt)
+report = ReportService(prompt=prompt)
+report.get_report()
