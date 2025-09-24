@@ -3,17 +3,6 @@
 ## Overview
 This is a project of appendix generator based on GitHub data and analysis with AI.
 
-## Reasons For My Technical Choices
-- **Python:** Is a modern languages to work with implementations like integrations with AI.
-- **GitHub Integration:** Read-only access to collect data on commits, tags, and predominant languages.
-- **Data Analysis with Groq:** Use of the Groq API for deep analysis of code metrics and benchmarking. It has a free api, good to use for this case.
-- **ChatGPT to code references** Use of ChatGPT to generate examples of code similar to what should be implemented.
-- **MVP Focus:** Fast and scalable delivery, with an architecture prepared for future expansion.
-
-## AI Tools Utilized
-- **Groq:** Intelligence engine for repository data analysis and peer benchmarking.
-- **ChatGPT:** Assisted in code examples generation for PDF formatting and integrations.
-
 
 ## How the Solution Addresses the Core Problem
 This MVP has the ability to analyze essential parameters of a repository/project and provide a concise analysis on the state and quality of the application/system.
